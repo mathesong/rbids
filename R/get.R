@@ -28,4 +28,36 @@ get_subjects <- function(studypath=NULL, json_info = NULL) {
   as.character(na.omit(unique(json_info$subject))) # omit NAs
 }
 
-# get_metadata <- function(filename){}
+#' Get metadata from json file
+#'
+#' Retrive metadata from a json file in a folder in the BIDS project
+#'
+#' @param fullfilename Full name of .json file (including path).
+#' @param filepath Path to .json file, but no name of the actual file.
+#'
+#' @return Meta-infomration contained in a .json file
+#' @export
+#'
+#' @examples
+#' get_metadata(fullfilename = './sub-01/anat/sub-01_T1w.json')
+get_metadata <- function(fullfilename = NULL, filepath = NULL) {
+  if ((is.null(fullfilename) + is.null(filepath)) != 1) {
+    stop("Specify either fullfilename to .json file or a filepath were json file is located")
+  }
+
+  if (!is.null(fullfilename)) {
+    jsonfile <- get_json_data(fullfilename)
+  }
+
+  if (!is.null(filepath)) {
+    jsonfile <- list.files(
+      path = filepath,
+      pattern = ".json",
+      full.names = F
+    )[1]
+    if (length(jsonfile) > 1) {
+      warning("More than one .json file in folder. Will only return content of the first one.")
+    }
+  }
+  jsonlite::read_json(jsonfile)
+}
