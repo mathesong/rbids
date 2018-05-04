@@ -7,7 +7,7 @@
 vis_layout(studypath)
 }
 \arguments{
-\item{studypath}{path to BIDS project}
+\item{studypath}{The main folder path for a BIDS dataset}
 }
 \value{
 a data.tree S6 object outlining the project layout
