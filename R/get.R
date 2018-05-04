@@ -121,10 +121,10 @@ get <- function(studypath = NULL, json_info=NULL, extension = NULL,
     stringr::str_sub(string = json_files$relpath, start = nchar(json_files$relpath) - 4, end = nchar(json_files$relpath)) <- ".nii.gz"
   } else if (extension == "nii" | extension == ".nii") {
     stringr::str_sub(string = json_files$relpath, start = nchar(json_files$relpath) - 4, end = nchar(json_files$relpath)) <- ".nii"
-  } else if (".EEG_file_extension") {
+  } else if (extension == "EEG_file_extension" | extension == ".EEG_file_extension") {
     stringr::str_sub(string = json_files$relpath, start = nchar(json_files$relpath) - 4, end = nchar(json_files$relpath)) <- ".EEG_file_extension"
   } else {
-    stop('File extension must be specified as ".nii", ".nii.gz" or ".EEG_file_extension"')
+    stop('extension must be specified as ".nii", ".nii.gz" or ".EEG_file_extension"')
   }
 
   return(json_files$relpath)
