@@ -30,7 +30,7 @@ get_subjects <- function(studypath=NULL, json_info = NULL) {
 
 #' Get metadata from json file
 #'
-#' Retrive metadata from a json file in a folder in the BIDS project
+#' Retrive a list containing the metadata from a json file located in a folder in the BIDS project
 #'
 #' @param fullfilename Full name of .json file (including path).
 #' @param filepath Path to .json file, but no name of the actual file.
@@ -50,14 +50,11 @@ get_metadata <- function(fullfilename = NULL, filepath = NULL) {
   }
 
   if (!is.null(filepath)) {
-    jsonfile <- list.files(
-      path = filepath,
-      pattern = ".json",
-      full.names = F
-    )[1]
-    if (length(jsonfile) > 1) {
+    jsonfile <- fs::dir_info(path = filepath, glob = "*.json")
+    if (length(jsonfile$path) > 1) {
       warning("More than one .json file in folder. Will only return content of the first one.")
     }
+    jsonfile <- jsonfile$path[1]
   }
   jsonlite::read_json(jsonfile)
 }
