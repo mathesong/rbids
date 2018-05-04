@@ -1,12 +1,14 @@
 Package: rbids
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Title: R Package To Access BIDS Datasets
+Version: 0.0.0.9000
+Author: c(
+    person("Granville", "Matheson", email = "mathesong@gmail.com", role = c("aut", "cre")),
+    person("Pontus", "Plavén-Sigray", email = "pontus.sigray@gmail.com", role = role = c("aut")) )
+Maintainer: Granville Matheson <mathesong@gmail.com>
+Description: Allows easy access to BIDS datasets by querying the files
+   and folders and getting the relevant information.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: 
