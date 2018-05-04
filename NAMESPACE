@@ -2,5 +2,6 @@
 
 export("%>%")
 export(check_dataset_root)
-export(fix_path)
+export(filename_attributes)
+export(get_json_data)
 importFrom(magrittr,"%>%")
