@@ -1,6 +1,6 @@
 #' Title
 #'
-#' @param studypath path to BIDS project
+#' @param studypath The main folder path for a BIDS dataset
 #' @return a data.tree S6 object outlining the project layout
 #' @export
 #'
