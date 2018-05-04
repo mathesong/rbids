@@ -75,6 +75,7 @@ get_metadata <- function(fullfilename = NULL, filepath = NULL) {
 #' @param recs Vector specifying which recs' imagefile-paths to retrieve. If left empty all recs will be queried.
 #' @param runs Vector specifying which runs' imagefile-paths to retrieve. If left empty all runs will be queried.
 #' @param modalities Vector specifying which modalities' imagefile-paths to retrieve. If left empty all modalities will be queried.
+#' @param extension Specify what extension the queried imagefiles have.
 #'
 #' @return Vector containing relative paths
 #' @export

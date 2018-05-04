@@ -26,6 +26,8 @@ get(studypath = NULL, json_info = NULL, subjects = NULL,
 \item{runs}{Vector specifying which runs' imagefile-paths to retrieve. If left empty all runs will be queried.}
 
 \item{modalities}{Vector specifying which modalities' imagefile-paths to retrieve. If left empty all modalities will be queried.}
+
+\item{extension}{Specify what extension the queried imagefiles have.}
 }
 \value{
 Vector containing relative paths
