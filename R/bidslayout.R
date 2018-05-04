@@ -57,7 +57,7 @@ filename_attributes <- function(filename) {
 #' @examples
 #'
 get_json_data <- function(studypath) {
-  if (check_dataset_root == FALSE) {
+  if (check_dataset_root(studypath) == FALSE) {
     stop(glue::glue(
       "This does not appear to be the root folder of a valid BIDS",
       "dataset, as no dataset_description.json file is found there"
