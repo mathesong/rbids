@@ -68,27 +68,27 @@ get_metadata <- function(fullfilename = NULL, filepath = NULL) {
 #'
 #' @param studypath The main folder path for a BIDS dataset. If 'json_info' is not specified 'studypath' has to be specified.
 #' @param json_info Data frame containing all json information, from 'get_json_data' function. If 'studypath' is not specified 'json_info' has to be specified.
-#' @param subjects Vector specifying which subjects' imagefile-paths to retrieve. If left empty all subjects will be queried.
-#' @param sessions Vector specifying which sessions' imagefile-paths to retrieve. If left empty all sessions will be queried.
-#' @param tasks Vector specifying which tasks' imagefile-paths to retrieve. If left empty all tasks will be queried.
-#' @param acqs Vector specifying which acquisition protocols' imagefile-paths to retrieve. If left empty all acquisition protocols will be queried.
-#' @param recs Vector specifying which recs' imagefile-paths to retrieve. If left empty all recs will be queried.
-#' @param runs Vector specifying which runs' imagefile-paths to retrieve. If left empty all runs will be queried.
-#' @param modalities Vector specifying which modalities' imagefile-paths to retrieve. If left empty all modalities will be queried.
 #' @param extension Specify what extension the queried imagefiles have.
+#' @param subjects (Optional) Vector specifying which subjects' imagefile-paths to retrieve. If left empty all subjects will be queried.
+#' @param sessions (Optional) Vector specifying which sessions' imagefile-paths to retrieve. If left empty all sessions will be queried.
+#' @param tasks (Optional) Vector specifying which tasks' imagefile-paths to retrieve. If left empty all tasks will be queried.
+#' @param acqs (Optional) Vector specifying which acquisition protocols' imagefile-paths to retrieve. If left empty all acquisition protocols will be queried.
+#' @param recs (Optional) Vector specifying which recs' imagefile-paths to retrieve. If left empty all recs will be queried.
+#' @param runs (Optional) Vector specifying which runs' imagefile-paths to retrieve. If left empty all runs will be queried.
+#' @param modalities (Optional) Vector specifying which modalities' imagefile-paths to retrieve. If left empty all modalities will be queried.
 #'
 #' @return Vector containing relative paths
 #' @export
 #'
 #' @examples
 #'
-#' get(studypath = getwd(), subjects = c('01','02','04'), sessions = '2', modalities = c('pet','mr')  )
+#' get(studypath = getwd(), extension = '.nii.gz', subjects = c('01','02','04'), sessions = '2', modalities = c('pet','mr')  )
 #'
-get <- function(studypath = NULL, json_info=NULL,
+get <- function(studypath = NULL, json_info=NULL, extension = NULL,
                 subjects = NULL, sessions = NULL,
                 tasks = NULL, acqs = NULL,
                 recs = NULL, runs = NULL,
-                modalities = NULL, extension = NULL) {
+                modalities = NULL) {
   if ((is.null(studypath) + is.null(json_info)) != 1) {
     stop("Specify either studypath to BIDS project or a dataframe from rbids::get_json_data ")
   }

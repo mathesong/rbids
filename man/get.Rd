@@ -4,30 +4,30 @@
 \alias{get}
 \title{Get files and their relative paths}
 \usage{
-get(studypath = NULL, json_info = NULL, subjects = NULL,
-  sessions = NULL, tasks = NULL, acqs = NULL, recs = NULL,
-  runs = NULL, modalities = NULL, extension = NULL)
+get(studypath = NULL, json_info = NULL, extension = NULL,
+  subjects = NULL, sessions = NULL, tasks = NULL, acqs = NULL,
+  recs = NULL, runs = NULL, modalities = NULL)
 }
 \arguments{
 \item{studypath}{The main folder path for a BIDS dataset. If 'json_info' is not specified 'studypath' has to be specified.}
 
 \item{json_info}{Data frame containing all json information, from 'get_json_data' function. If 'studypath' is not specified 'json_info' has to be specified.}
 
-\item{subjects}{Vector specifying which subjects' imagefile-paths to retrieve. If left empty all subjects will be queried.}
-
-\item{sessions}{Vector specifying which sessions' imagefile-paths to retrieve. If left empty all sessions will be queried.}
-
-\item{tasks}{Vector specifying which tasks' imagefile-paths to retrieve. If left empty all tasks will be queried.}
-
-\item{acqs}{Vector specifying which acquisition protocols' imagefile-paths to retrieve. If left empty all acquisition protocols will be queried.}
-
-\item{recs}{Vector specifying which recs' imagefile-paths to retrieve. If left empty all recs will be queried.}
-
-\item{runs}{Vector specifying which runs' imagefile-paths to retrieve. If left empty all runs will be queried.}
-
-\item{modalities}{Vector specifying which modalities' imagefile-paths to retrieve. If left empty all modalities will be queried.}
-
 \item{extension}{Specify what extension the queried imagefiles have.}
+
+\item{subjects}{(Optional) Vector specifying which subjects' imagefile-paths to retrieve. If left empty all subjects will be queried.}
+
+\item{sessions}{(Optional) Vector specifying which sessions' imagefile-paths to retrieve. If left empty all sessions will be queried.}
+
+\item{tasks}{(Optional) Vector specifying which tasks' imagefile-paths to retrieve. If left empty all tasks will be queried.}
+
+\item{acqs}{(Optional) Vector specifying which acquisition protocols' imagefile-paths to retrieve. If left empty all acquisition protocols will be queried.}
+
+\item{recs}{(Optional) Vector specifying which recs' imagefile-paths to retrieve. If left empty all recs will be queried.}
+
+\item{runs}{(Optional) Vector specifying which runs' imagefile-paths to retrieve. If left empty all runs will be queried.}
+
+\item{modalities}{(Optional) Vector specifying which modalities' imagefile-paths to retrieve. If left empty all modalities will be queried.}
 }
 \value{
 Vector containing relative paths
@@ -37,6 +37,6 @@ Retrieve files and their relative paths from BIDS project
 }
 \examples{
 
-get(studypath = getwd(), subjects = c('01','02','04'), sessions = '2', modalities = c('pet','mr')  )
+get(studypath = getwd(), extension = '.nii.gz', subjects = c('01','02','04'), sessions = '2', modalities = c('pet','mr')  )
 
 }
