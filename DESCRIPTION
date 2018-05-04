@@ -13,6 +13,10 @@ Imports:
     dplyr,
     purrr,
     jsonlite,
-    magrittr
+    magrittr,
+    stringr,
+    glue,
+    tibble,
+    data.tree
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.0.1
