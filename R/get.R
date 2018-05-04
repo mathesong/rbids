@@ -5,7 +5,7 @@
 #' Lists all subjects in BIDS project that have .json files
 #'
 #' @param studypath The main folder path for a BIDS dataset. If 'json_info' is not specified 'studypath' has to be specified.
-#' @param json_info Data fare containing all json information, from 'get_json_data' function. If 'studypath' is not specified 'json_info' has to be specified.
+#' @param json_info Data frame containing all json information, from 'get_json_data' function. If 'studypath' is not specified 'json_info' has to be specified.
 #'
 #' @return A vector of all subjects in the BIDS project
 #' @export
@@ -58,3 +58,98 @@ get_metadata <- function(fullfilename = NULL, filepath = NULL) {
   }
   jsonlite::read_json(jsonfile)
 }
+
+
+
+
+#' Get files and their relative paths
+#'
+#' Retrieve files and their relative paths from BIDS project
+#'
+#' @param studypath The main folder path for a BIDS dataset. If 'json_info' is not specified 'studypath' has to be specified.
+#' @param json_info Data frame containing all json information, from 'get_json_data' function. If 'studypath' is not specified 'json_info' has to be specified.
+#' @param subjects Vector specifying which subjects' imagefile-paths to retrieve. If left empty all subjects will be queried.
+#' @param sessions Vector specifying which sessions' imagefile-paths to retrieve. If left empty all sessions will be queried.
+#' @param tasks Vector specifying which tasks' imagefile-paths to retrieve. If left empty all tasks will be queried.
+#' @param acqs Vector specifying which acquisition protocols' imagefile-paths to retrieve. If left empty all acquisition protocols will be queried.
+#' @param recs Vector specifying which recs' imagefile-paths to retrieve. If left empty all recs will be queried.
+#' @param runs Vector specifying which runs' imagefile-paths to retrieve. If left empty all runs will be queried.
+#' @param modalities Vector specifying which modalities' imagefile-paths to retrieve. If left empty all modalities will be queried.
+#'
+#' @return Vector containing relative paths
+#' @export
+#'
+#' @examples
+#'
+#' get(studypath = getwd(), subjects = c('01','02','04'), sessions = '2', modalities = c('pet','mr')  )
+#'
+get <- function(studypath = NULL, json_info=NULL,
+                subjects = NULL, sessions = NULL,
+                tasks = NULL, acqs = NULL,
+                recs = NULL, runs = NULL,
+                modalities = NULL, extension = NULL) {
+  if ((is.null(studypath) + is.null(json_info)) != 1) {
+    stop("Specify either studypath to BIDS project or a dataframe from rbids::get_json_data ")
+  }
+
+  if (!is.null(studypath)) {
+    json_info <- get_json_data(studypath)
+  }
+
+  if (!is.null(json_info)) {
+    json_info <- json_info
+  }
+
+  filterAll <- function(filtervar, dfcolumn) {
+    unlist(ifelse(test = is.null(filtervar), yes = list(dfcolumn), no = list(filtervar)))
+  }
+
+  # Filter for "subject","session","task","acq","rec","run","modality":
+  json_files <- json_info %>%
+    ungroup() %>%
+    filter(subject %in% filterAll(subjects, .$subject)) %>% # if subject == NULL, filter on all subjects
+    filter(session %in% filterAll(sessions, .$session)) %>%
+    filter(task %in% filterAll(tasks, .$task)) %>%
+    filter(acq %in% filterAll(acqs, .$acq)) %>%
+    filter(rec %in% filterAll(recs, .$rec)) %>%
+    filter(run %in% filterAll(runs, .$run)) %>%
+    filter(modality %in% filterAll(modalities, .$modality)) %>%
+    select(relpath)
+
+  if (extension == "nii.gz" | extension == ".nii.gz") {
+    stringr::str_sub(string = json_files$relpath, start = nchar(json_files$relpath) - 4, end = nchar(json_files$relpath)) <- ".nii.gz"
+  } else if (extension == "nii" | extension == ".nii") {
+    stringr::str_sub(string = json_files$relpath, start = nchar(json_files$relpath) - 4, end = nchar(json_files$relpath)) <- ".nii"
+  } else if (".EEG_file_extension") {
+    stringr::str_sub(string = json_files$relpath, start = nchar(json_files$relpath) - 4, end = nchar(json_files$relpath)) <- ".EEG_file_extension"
+  } else {
+    stop('File extension must be specified as ".nii", ".nii.gz" or ".EEG_file_extension"')
+  }
+
+  return(json_files$relpath)
+}
+
+
+
+
+
+
+# get_fullpaths <- function(filenames){
+#
+#   json_info$filename_no_extentions <- json_info$filename
+#   stringr::str_sub(json_info$filename_no_extentions,
+#                    start = nchar(json_info$filename_no_extentions)-4,
+#                    end = nchar(json_info$filename_no_extentions)) <-''
+#
+#   filenamesWOExtension <- stringr::str_match(filenames, pattern = '(.+)(.*\\.nii.*)')[,2]
+#   filenamesExtension <- stringr::str_match(filenames, pattern = '(.+)(.*\\.nii.*)')[,3]
+#
+#   filespaths_out <- json_info %>%
+#     filter(filename_no_extentions %in% filenames) %>%
+#     select(relpath) %>%
+#     as.character()
+#
+#   return(filespaths_out)
+# }
+
+# get_relativepaths <- function(filenames){}

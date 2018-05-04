@@ -9,7 +9,7 @@ get_subjects(studypath = NULL, json_info = NULL)
 \arguments{
 \item{studypath}{The main folder path for a BIDS dataset. If 'json_info' is not specified 'studypath' has to be specified.}
 
-\item{json_info}{Data fare containing all json information, from 'get_json_data' function. If 'studypath' is not specified 'json_info' has to be specified.}
+\item{json_info}{Data frame containing all json information, from 'get_json_data' function. If 'studypath' is not specified 'json_info' has to be specified.}
 }
 \value{
 A vector of all subjects in the BIDS project
