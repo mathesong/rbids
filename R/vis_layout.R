@@ -6,8 +6,8 @@
 #' @export
 #'
 #' @examples
-#' visualize_layout(studypath = getwd(), write_to_csv_name =paste0(getwd(),'/BIDslayout.csv')  )
-visualize_layout <- function(studypath, write_to_csv_name=NULL) {
+#' vis_layout(studypath = getwd(), write_to_csv_name =paste0(getwd(),'/BIDslayout.csv')  )
+vis_layout <- function(studypath, write_to_csv_name=NULL) {
   files <- list.files(path,
     pattern = ".json",
     recursive = T
