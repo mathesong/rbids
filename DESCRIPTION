@@ -17,6 +17,7 @@ Imports:
     stringr,
     glue,
     tibble,
-    data.tree
+    data.tree,
+    fs
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.0.1
