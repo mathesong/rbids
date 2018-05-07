@@ -57,7 +57,7 @@ get_metadata <- function(fullfilename = NULL, filepath = NULL) {
   jsonlite::read_json(jsonfile)
 }
 
-#' Get files and their relative paths
+#' Get filenames and their relative and full paths
 #'
 #' Retrieve files and their relative paths from BIDS project
 #'

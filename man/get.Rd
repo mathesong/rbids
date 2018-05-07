@@ -2,7 +2,7 @@
 % Please edit documentation in R/get.R
 \name{get}
 \alias{get}
-\title{Get files and their relative paths}
+\title{Get filenames and their relative and full paths}
 \usage{
 get(studypath = NULL, json_info = NULL, extension = NULL,
   subjects = NULL, sessions = NULL, tasks = NULL, acqs = NULL,
