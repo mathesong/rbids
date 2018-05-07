@@ -72,7 +72,7 @@ get_metadata <- function(fullfilename = NULL, filepath = NULL) {
 #' @param runs (Optional) Vector specifying which runs' imagefile-paths to retrieve. If left empty all runs will be queried.
 #' @param modalities (Optional) Vector specifying which modalities' imagefile-paths to retrieve. If left empty all modalities will be queried.
 #'
-#' @return Vector containing relative paths
+#' @return Tibble containing relative paths, filenames, full paths and full filenames (full paths + filenames)
 #' @export
 #'
 #' @examples
