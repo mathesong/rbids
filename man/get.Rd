@@ -33,7 +33,7 @@ get(studypath = NULL, json_info = NULL, extension = NULL,
 Tibble containing relative paths, filenames, full paths and full filenames (full paths + filenames)
 }
 \description{
-Retrieve files and their relative paths from BIDS project
+Retrieve filenames and their relative and full paths from a BIDS folder structure
 }
 \examples{
 

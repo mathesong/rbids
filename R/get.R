@@ -59,7 +59,7 @@ get_metadata <- function(fullfilename = NULL, filepath = NULL) {
 
 #' Get filenames and their relative and full paths
 #'
-#' Retrieve files and their relative paths from BIDS project
+#' Retrieve filenames and their relative and full paths from a BIDS folder structure
 #'
 #' @param studypath The main folder path for a BIDS dataset. If 'json_info' is not specified 'studypath' has to be specified.
 #' @param json_info Data frame containing all json information, from 'get_json_data' function. If 'studypath' is not specified 'json_info' has to be specified.
@@ -102,15 +102,15 @@ get <- function(studypath = NULL, json_info=NULL, extension = NULL,
 
   # Filter for "subject","session","task","acq","rec","run","modality":
   json_files <- json_info %>%
-    ungroup() %>%
-    filter(json_info$relpath != "dataset_description.json") %>%
-    filter(subject %in% filterAll(subjects, .$subject)) %>% # if subject == NULL, filter on all subjects
-    filter(session %in% filterAll(sessions, .$session)) %>%
-    filter(task %in% filterAll(tasks, .$task)) %>%
-    filter(acq %in% filterAll(acqs, .$acq)) %>%
-    filter(rec %in% filterAll(recs, .$rec)) %>%
-    filter(run %in% filterAll(runs, .$run)) %>%
-    filter(modality %in% filterAll(modalities, .$modality))
+    dplyr::ungroup() %>%
+    dplyr::filter(json_info$relpath != "dataset_description.json") %>%
+    dplyr::filter(subject %in% filterAll(subjects, .$subject)) %>% # if subject == NULL, filter on all subjects
+    dplyr::filter(session %in% filterAll(sessions, .$session)) %>%
+    dplyr::filter(task %in% filterAll(tasks, .$task)) %>%
+    dplyr::filter(acq %in% filterAll(acqs, .$acq)) %>%
+    dplyr::filter(rec %in% filterAll(recs, .$rec)) %>%
+    dplyr::filter(run %in% filterAll(runs, .$run)) %>%
+    dplyr::filter(modality %in% filterAll(modalities, .$modality))
 
   # Remove filename from relpath
   stringr::str_sub(string = json_files$relpath, start = nchar(json_files$relpath) - nchar(json_files$filename), end = nchar(json_files$relpath)) <- ""
