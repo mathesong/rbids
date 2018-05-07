@@ -1,5 +1,3 @@
-
-
 #' Get subjects in BIDS project
 #'
 #' Lists all subjects in BIDS project that have .json files
@@ -59,9 +57,6 @@ get_metadata <- function(fullfilename = NULL, filepath = NULL) {
   jsonlite::read_json(jsonfile)
 }
 
-
-
-
 #' Get files and their relative paths
 #'
 #' Retrieve files and their relative paths from BIDS project
@@ -108,49 +103,33 @@ get <- function(studypath = NULL, json_info=NULL, extension = NULL,
   # Filter for "subject","session","task","acq","rec","run","modality":
   json_files <- json_info %>%
     ungroup() %>%
+    filter(json_info$relpath != "dataset_description.json") %>%
     filter(subject %in% filterAll(subjects, .$subject)) %>% # if subject == NULL, filter on all subjects
     filter(session %in% filterAll(sessions, .$session)) %>%
     filter(task %in% filterAll(tasks, .$task)) %>%
     filter(acq %in% filterAll(acqs, .$acq)) %>%
     filter(rec %in% filterAll(recs, .$rec)) %>%
     filter(run %in% filterAll(runs, .$run)) %>%
-    filter(modality %in% filterAll(modalities, .$modality)) %>%
-    select(relpath)
+    filter(modality %in% filterAll(modalities, .$modality))
+
+  # Remove filename from relpath
+  stringr::str_sub(string = json_files$relpath, start = nchar(json_files$relpath) - nchar(json_files$filename), end = nchar(json_files$relpath)) <- ""
+  stringr::str_sub(string = json_files$path, start = nchar(json_files$path) - nchar(json_files$filename), end = nchar(json_files$path)) <- ""
 
   if (extension == "nii.gz" | extension == ".nii.gz") {
-    stringr::str_sub(string = json_files$relpath, start = nchar(json_files$relpath) - 4, end = nchar(json_files$relpath)) <- ".nii.gz"
+    stringr::str_sub(string = json_files$filename, start = nchar(json_files$filename) - 4, end = nchar(json_files$filename)) <- ".nii.gz"
   } else if (extension == "nii" | extension == ".nii") {
-    stringr::str_sub(string = json_files$relpath, start = nchar(json_files$relpath) - 4, end = nchar(json_files$relpath)) <- ".nii"
+    stringr::str_sub(string = json_files$filename, start = nchar(json_files$filename) - 4, end = nchar(json_files$filename)) <- ".nii"
   } else if (extension == "EEG_file_extension" | extension == ".EEG_file_extension") {
-    stringr::str_sub(string = json_files$relpath, start = nchar(json_files$relpath) - 4, end = nchar(json_files$relpath)) <- ".EEG_file_extension"
+    stringr::str_sub(string = json_files$filename, start = nchar(json_files$filename) - 4, end = nchar(json_files$filename)) <- ".EEG_file_extension"
   } else {
     stop('extension must be specified as ".nii", ".nii.gz" or ".EEG_file_extension"')
   }
 
-  return(json_files$relpath)
+  tibble::tibble(
+    relative_paths = json_files$relpath,
+    filenames = json_files$filename,
+    full_paths = json_files$path,
+    full_filenames = paste0(json_files$path, "/", json_files$filename)
+  )
 }
-
-
-
-
-
-
-# get_fullpaths <- function(filenames){
-#
-#   json_info$filename_no_extentions <- json_info$filename
-#   stringr::str_sub(json_info$filename_no_extentions,
-#                    start = nchar(json_info$filename_no_extentions)-4,
-#                    end = nchar(json_info$filename_no_extentions)) <-''
-#
-#   filenamesWOExtension <- stringr::str_match(filenames, pattern = '(.+)(.*\\.nii.*)')[,2]
-#   filenamesExtension <- stringr::str_match(filenames, pattern = '(.+)(.*\\.nii.*)')[,3]
-#
-#   filespaths_out <- json_info %>%
-#     filter(filename_no_extentions %in% filenames) %>%
-#     select(relpath) %>%
-#     as.character()
-#
-#   return(filespaths_out)
-# }
-
-# get_relativepaths <- function(filenames){}
