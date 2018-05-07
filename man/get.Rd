@@ -30,7 +30,7 @@ get(studypath = NULL, json_info = NULL, extension = NULL,
 \item{modalities}{(Optional) Vector specifying which modalities' imagefile-paths to retrieve. If left empty all modalities will be queried.}
 }
 \value{
-Vector containing relative paths
+Tibble containing relative paths, filenames, full paths and full filenames (full paths + filenames)
 }
 \description{
 Retrieve files and their relative paths from BIDS project
