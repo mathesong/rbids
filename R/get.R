@@ -26,36 +26,36 @@ get_subjects <- function(studypath=NULL, json_info = NULL) {
   as.character(na.omit(unique(json_info$subject))) # omit NAs
 }
 
-#' Get metadata from json file
-#'
-#' Retrive a list containing the metadata from a json file located in a folder in the BIDS project
-#'
-#' @param fullfilename Full name of .json file (including path).
-#' @param filepath Path to .json file, but no name of the actual file.
-#'
-#' @return Meta-infomration contained in a .json file
-#' @export
-#'
-#' @examples
-#' get_metadata(fullfilename = './sub-01/anat/sub-01_T1w.json')
-get_metadata <- function(fullfilename = NULL, filepath = NULL) {
-  if ((is.null(fullfilename) + is.null(filepath)) != 1) {
-    stop("Specify either fullfilename to .json file or a filepath were json file is located")
-  }
-
-  if (!is.null(fullfilename)) {
-    jsonfile <- get_json_data(fullfilename)
-  }
-
-  if (!is.null(filepath)) {
-    jsonfile <- fs::dir_info(path = filepath, glob = "*.json")
-    if (length(jsonfile$path) > 1) {
-      warning("More than one .json file in folder. Will only return content of the first one.")
-    }
-    jsonfile <- jsonfile$path[1]
-  }
-  jsonlite::read_json(jsonfile)
-}
+# #' Get metadata from json file
+# #'
+# #' Retrive a list containing the metadata from a json file located in a folder in the BIDS project
+# #'
+# #' @param fullfilename Full name of .json file (including path).
+# #' @param filepath Path to .json file, but no name of the actual file.
+# #'
+# #' @return Meta-infomration contained in a .json file
+# #' @export
+# #'
+# #' @examples
+# #' get_metadata(fullfilename = './sub-01/anat/sub-01_T1w.json')
+# get_metadata <- function(fullfilename = NULL, filepath = NULL) {
+#   if ((is.null(fullfilename) + is.null(filepath)) != 1) {
+#     stop("Specify either fullfilename to .json file or a filepath were json file is located")
+#   }
+#
+#   if (!is.null(fullfilename)) {
+#     jsonfile <- get_json_data(fullfilename)
+#   }
+#
+#   if (!is.null(filepath)) {
+#     jsonfile <- fs::dir_info(path = filepath, glob = "*.json")
+#     if (length(jsonfile$path) > 1) {
+#       warning("More than one .json file in folder. Will only return content of the first one.")
+#     }
+#     jsonfile <- jsonfile$path[1]
+#   }
+#   jsonlite::read_json(jsonfile)
+# }
 
 #' Get filenames and their relative and full paths
 #'
@@ -132,4 +132,99 @@ get <- function(studypath = NULL, json_info=NULL, extension = NULL,
     full_paths = json_files$path,
     full_filenames = paste0(json_files$path, "/", json_files$filename)
   )
+}
+
+
+#' Get files and filenames
+#'
+#' Query the data files from a BIDS folder
+#'
+#' @param studypath The main folder path for a BIDS dataset.
+#' @param extensions A vector of file extensions, e.g. c(".nii.gz", ".nii")
+#' @param ... Other conditions to filter the dataset on, such as sub, ses, task,
+#'   acq, rec, run, modality. Note that these arguments are passed to
+#'   dplyr::filter, so they are evaluated. Thus they should be inputted as such.
+#'   e.g. sub %in% c("01", "02") or modality=="T1w".
+#'
+#' @return Tibble containing the relevant file information
+#' @export
+#'
+#' @examples
+#' subList <- c("01", "03")
+#' get_files(studypath, extensions=c('.nii', '.nii.gz'), sub %in% subList, modality=="T1w")
+get_files <- function(studypath, extensions, ...) {
+
+  extension_globs <- paste0('*', extensions)
+  ext_glob <- paste(extension_globs,collapse='|')
+  # exts_re <- paste( stringr::str_replace( extensions, '^\\.', ''), collapse='|')
+
+  fs::dir_info(studypath, recursive = T, glob = paste(extension_globs,collapse='|')) %>%
+    dplyr::mutate(
+      relpath = fs::path_rel(path, studypath),
+      pathdepth = stringr::str_count(relpath, "/"),
+      filename = stringr::str_match(path, glue::glue(".+/(.*\\.{exts_re}])"))[, 2]
+    ) %>%
+    dplyr::bind_cols(filename_attributes(.$filename)) %>%
+    dplyr::filter(...)
+
+}
+
+
+#' Get Data from JSON files in a BIDS Study Folder
+#'
+#' @param studypath The main folder path for a BIDS dataset
+#'
+#' @return A nested tibble with file information, and JSON file contents
+#' @export
+#'
+#' @examples
+#'
+get_jsondata <- function(studypath) {
+  if (check_dataset_root(studypath) == FALSE) {
+    stop(glue::glue(
+      "This does not appear to be the root folder of a valid BIDS",
+      "dataset, as no dataset_description.json file is found there"
+    ))
+  }
+
+  fs::dir_info(studypath, recursive = T, glob = "*.json") %>%
+    dplyr::mutate(
+      relpath = fs::path_rel(path, studypath),
+      pathdepth = stringr::str_count(relpath, "/"),
+      filename = stringr::str_match(path, ".+/(.*\\.json)")[, 2]
+    ) %>%
+    dplyr::bind_cols(filename_attributes(.$filename)) %>%
+    dplyr::group_by(path) %>%
+    dplyr::mutate(jsondata = list(jsonlite::fromJSON(path))) %>%
+    dplyr::ungroup()
+}
+
+#' Get File Metadata
+#'
+#' Fetches the metadata stored in json sidecars for a given image file.
+#'
+#' @param relpath The relative path and filename of the image file.
+#' @param studypath The path of the study
+#'
+#' @return A list containing all the metadata from relevant json sidecars which applies to a given image file.
+#' @export
+#'
+#' @examples
+#' get_metadata("sub-01/anat/sub-01_T1w.nii.gz", studypath)
+get_metadata <- function(relpath, studypath) {
+
+  json_info <- get_jsondata(studypath) %>%
+    select(sub:jsondata) %>%
+    select(-extension)
+
+
+  filename <- stringr::str_match(relpath, ".+/(.+?\\..*$)")[, 2]
+  file_info <- filename_attributes(filename)
+
+  # Need to figure out how to ignore NA values, and join them to any value in the other df
+
+  joined_info <- left_join(file_info, json_info)
+
+  rlist::list.merge(joined_info$jsondata)
+
 }

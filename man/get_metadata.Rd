@@ -2,21 +2,21 @@
 % Please edit documentation in R/get.R
 \name{get_metadata}
 \alias{get_metadata}
-\title{Get metadata from json file}
+\title{Get File Metadata}
 \usage{
-get_metadata(fullfilename = NULL, filepath = NULL)
+get_metadata(relpath, studypath)
 }
 \arguments{
-\item{fullfilename}{Full name of .json file (including path).}
+\item{relpath}{The relative path and filename of the image file.}
 
-\item{filepath}{Path to .json file, but no name of the actual file.}
+\item{studypath}{The path of the study}
 }
 \value{
-Meta-infomration contained in a .json file
+A list containing all the metadata from relevant json sidecars which applies to a given image file.
 }
 \description{
-Retrive a list containing the metadata from a json file located in a folder in the BIDS project
+Fetches the metadata stored in json sidecars for a given image file.
 }
 \examples{
-get_metadata(fullfilename = './sub-01/anat/sub-01_T1w.json')
+get_metadata("sub-01/anat/sub-01_T1w.nii.gz", studypath)
 }
