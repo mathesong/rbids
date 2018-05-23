@@ -27,7 +27,7 @@ check_dataset_root <- function(studypath) {
 #'
 filename_attributes <- function(filename) {
 
-  extension <- stringr::str_replace( extension, '^\\.', '')
+  extension <- stringr::str_match(filename, ".+?\\.(.*)")[, 2]
 
   sub <- stringr::str_match(filename, "sub-(.+?)_")[, 2]
   ses <- stringr::str_match(filename, "ses-(.+?)_")[, 2]
