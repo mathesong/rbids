@@ -156,7 +156,7 @@ get_files <- function(studypath, extensions, ...) {
 
   extension_globs <- paste0('*', extensions)
   ext_glob <- paste(extension_globs,collapse='|')
-  # exts_re <- paste( stringr::str_replace( extensions, '^\\.', ''), collapse='|')
+  #exts_re <- paste( stringr::str_replace( extensions, '^\\.', ''), collapse='|')
 
   fs::dir_info(studypath, recursive = T, glob = paste(extension_globs,collapse='|')) %>%
     dplyr::mutate(
@@ -211,20 +211,20 @@ get_jsondata <- function(studypath) {
 #'
 #' @examples
 #' get_metadata("sub-01/anat/sub-01_T1w.nii.gz", studypath)
-get_metadata <- function(relpath, studypath) {
-
-  json_info <- get_jsondata(studypath) %>%
-    select(sub:jsondata) %>%
-    select(-extension)
-
-
-  filename <- stringr::str_match(relpath, ".+/(.+?\\..*$)")[, 2]
-  file_info <- filename_attributes(filename)
-
-  # Need to figure out how to ignore NA values, and join them to any value in the other df
-
-  joined_info <- left_join(file_info, json_info)
-
-  rlist::list.merge(joined_info$jsondata)
-
-}
+# get_metadata <- function(relpath, studypath) {
+#
+#   json_info <- get_jsondata(studypath) %>%
+#     select(sub:jsondata) %>%
+#     select(-extension)
+#
+#
+#   filename <- stringr::str_match(relpath, ".+/(.+?\\..*$)")[, 2]
+#   file_info <- filename_attributes(filename)
+#
+#   # Need to figure out how to ignore NA values, and join them to any value in the other df
+#
+#   joined_info <- left_join(file_info, json_info)
+#
+#   rlist::list.merge(joined_info$jsondata)
+#
+# }
