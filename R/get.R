@@ -158,11 +158,11 @@ get_files <- function(studypath, extensions, ...) {
   ext_glob <- paste(extension_globs,collapse='|')
   #exts_re <- paste( stringr::str_replace( extensions, '^\\.', ''), collapse='|')
 
-  fs::dir_info(studypath, recursive = T, glob = paste(extension_globs,collapse='|')) %>%
+  fs::dir_info(studypath, recursive = T, glob = ext_glob) %>%
     dplyr::mutate(
       relpath = fs::path_rel(path, studypath),
       pathdepth = stringr::str_count(relpath, "/"),
-      filename = stringr::str_match(path, glue::glue(".+/(.*\\.{exts_re}])"))[, 2]
+      filename = stringr::str_match(path, ".+/(.+?\\..*)")[, 2]
     ) %>%
     dplyr::bind_cols(filename_attributes(.$filename)) %>%
     dplyr::filter(...)
@@ -228,3 +228,23 @@ get_jsondata <- function(studypath) {
 #   rlist::list.merge(joined_info$jsondata)
 #
 # }
+
+get_metadata <- function(relpath, studypath) {
+
+  json_info <- get_jsondata(studypath) %>%
+    select(sub:jsondata) %>%
+    select(-extension)
+
+
+  filename <- stringr::str_match(relpath, ".+/(.+?\\..*$)")[, 2]
+  file_info <- filename_attributes(filename)
+
+  # Need to figure out how to ignore NA values, and join them to any value in the other df
+
+  joined_info <- left_join(file_info, json_info)
+
+  rlist::list.merge(joined_info$jsondata)
+
+  # Need to figure out how to get this last function to work too
+}
+>>>>>>> 1c97314e68fe153481bf9f95c9271962d826d896
